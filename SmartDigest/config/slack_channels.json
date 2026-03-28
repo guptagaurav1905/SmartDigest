@@ -1,0 +1,24 @@
+{
+  "_comment": "Slack channels to monitor for EOD digest. Bot needs channels:history scope.",
+  "channels": [
+    {
+      "id": "C0000000001",
+      "name": "general",
+      "enabled": false,
+      "_note": "Replace id with real channel ID from Slack (right-click channel → Copy link → last part of URL)"
+    },
+    {
+      "id": "C0000000002",
+      "name": "engineering",
+      "enabled": false
+    },
+    {
+      "id": "C0000000003",
+      "name": "ai-research",
+      "enabled": false
+    }
+  ],
+  "fetch_hours_back": 12,
+  "min_reactions_for_highlight": 2,
+  "_setup": "1. Create Slack app at api.slack.com/apps  2. Add OAuth scopes: channels:history channels:read  3. Install to workspace  4. Copy Bot Token → export SMARTDIGEST_SLACK_BOT_TOKEN=xoxb-..."
+}

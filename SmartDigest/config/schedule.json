@@ -1,0 +1,23 @@
+{
+  "_comment": "Pipeline scheduling and operational settings.",
+  "cron": {
+    "collect_and_brief": "0 6 * * *",
+    "_note": "Runs full pipeline at 6:00 AM daily (local time)."
+  },
+  "pipeline": {
+    "stages": ["source-collector", "relevance-scorer", "briefing-composer"],
+    "abort_on_stage_failure": false
+  },
+  "retention": {
+    "raw_data_days": 7,
+    "scored_data_days": 14,
+    "briefings_days": 30,
+    "seen_items_days": 7
+  },
+  "rate_limits": {
+    "github_requests_per_run": 50,
+    "arxiv_requests_per_run": 20,
+    "rss_timeout_seconds": 10,
+    "hackernews_timeout_seconds": 15
+  }
+}

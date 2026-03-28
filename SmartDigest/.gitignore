@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# SmartDigest — secrets & tokens (NEVER commit these)
+.env
+state/google_token.json
+state/google_credentials.json
+
+# SmartDigest — generated data (can be regenerated)
+data/raw/
+data/scored/
+data/sod/
+data/eod/
+data/briefings/
+db/smartdigest.db
+db/smartdigest.db-journal
+db/smartdigest.db-shm
+db/smartdigest.db-wal
+
+# SmartDigest — runtime state (auto-updated by scripts)
+state/last_run.json
+state/seen_items.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

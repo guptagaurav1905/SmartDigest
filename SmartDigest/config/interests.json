@@ -1,0 +1,31 @@
+{
+  "_comment": "Relevance scoring config. NL Config skill updates this based on your conversational preferences.",
+  "high_priority": [
+    "LLM agents", "AI safety", "Claude", "Anthropic", "OpenClaw",
+    "autonomous agents", "tool use", "function calling",
+    "prompt engineering", "Rust", "systems programming"
+  ],
+  "medium_priority": [
+    "distributed systems", "developer tools", "open source releases",
+    "benchmarks", "retrieval augmented generation", "RAG",
+    "fine-tuning", "Python", "API design"
+  ],
+  "low_priority": [
+    "general tech news", "startup funding",
+    "cloud infrastructure", "mobile development"
+  ],
+  "blocklist": [
+    "crypto", "NFT", "blockchain", "metaverse",
+    "web3", "price prediction"
+  ],
+  "scoring": {
+    "threshold": 6.0,
+    "max_items_per_briefing": 10,
+    "source_boost": {
+      "arxiv": 0.5,
+      "github": 0.3,
+      "hackernews": 0.0,
+      "rss": 0.2
+    }
+  }
+}

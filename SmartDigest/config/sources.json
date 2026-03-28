@@ -1,0 +1,60 @@
+{
+  "_comment": "SmartDigest — Source configuration. Edit via NL Config skill or directly.",
+  "github": [
+    {
+      "repo": "anthropics/anthropic-sdk-python",
+      "watch": ["releases", "issues"],
+      "enabled": true
+    },
+    {
+      "repo": "openai/openai-python",
+      "watch": ["releases"],
+      "enabled": true
+    },
+    {
+      "repo": "microsoft/autogen",
+      "watch": ["releases", "discussions"],
+      "enabled": true
+    },
+    {
+      "repo": "langchain-ai/langchain",
+      "watch": ["releases"],
+      "enabled": true
+    }
+  ],
+  "rss": [
+    {
+      "name": "Simon Willison's Weblog",
+      "url": "https://simonwillison.net/atom/everything/",
+      "enabled": true
+    },
+    {
+      "name": "The Pragmatic Engineer",
+      "url": "https://newsletter.pragmaticengineer.com/feed",
+      "enabled": true
+    },
+    {
+      "name": "Andrej Karpathy Blog",
+      "url": "https://karpathy.github.io/feed.xml",
+      "enabled": true
+    }
+  ],
+  "hackernews": {
+    "enabled": true,
+    "fetch_top": 40,
+    "min_points": 100,
+    "min_comments": 10
+  },
+  "arxiv": [
+    {
+      "query": "large language model agents tool use",
+      "max_results": 8,
+      "enabled": true
+    },
+    {
+      "query": "reinforcement learning from human feedback RLHF",
+      "max_results": 5,
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "_comment": "Start-of-Day briefing configuration. Edit via NL Config skill.",
+  "weather": {
+    "city": "Mumbai",
+    "units": "metric",
+    "_note": "City name as recognized by wttr.in. Try your city name to verify."
+  },
+  "gmail": {
+    "labels": ["INBOX"],
+    "important_senders": [],
+    "max_emails": 15,
+    "_note": "Add email addresses to important_senders to prioritize them: ['boss@company.com']"
+  },
+  "calendar": {
+    "days_ahead": 1,
+    "include_all_day": true,
+    "_note": "days_ahead=1 shows today's events. Set to 2 to include tomorrow as well."
+  },
+  "tech_news": {
+    "enabled": true,
+    "max_items": 5,
+    "_note": "Top tech items from previous night's collection to include in SOD"
+  }
+}
