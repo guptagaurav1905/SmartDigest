@@ -221,7 +221,8 @@ def run(briefing_type: str = "sod", date_str: str | None = None,
 
     success = send_whatsapp(text, from_num, to_num, client)
     status = "success" if success else "failure"
-    update_last_run(f"whatsapp-{briefing_type}", status, f"delivered to {to_num}")
+    detail = f"sent to Twilio → {to_num}" if success else f"failed to send to {to_num}"
+    update_last_run(f"whatsapp-{briefing_type}", status, detail)
     return success
 
 

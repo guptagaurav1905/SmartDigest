@@ -1,0 +1,24 @@
+# SmartDigest dependencies
+
+# LLM scoring
+groq>=0.9.0
+
+# Observability core
+structlog>=23.1.0
+pydantic>=2.0.0
+prometheus-client>=0.20.0
+
+# Observability dashboard
+dash>=2.16.0
+plotly>=5.20.0
+pandas>=2.0.0
+
+# Google APIs (Calendar, Gmail)
+google-auth-oauthlib>=1.0.0
+google-api-python-client>=2.0.0
+
+# Optional: Langfuse tracing (uncomment to enable)
+langfuse>=2.0.0
+
+# Optional: delivery channels
+# twilio>=8.0.0   # WhatsApp

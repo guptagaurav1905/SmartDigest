@@ -102,21 +102,25 @@ def build_telegram_message(ranked: dict) -> list[str]:
         stars = score_to_stars(score)
         src_emoji = format_source_emoji(source)
 
+        # Escape dynamic content so stray * _ ` [ don't break Markdown parsing
+        safe_title  = escape_md(title)
+        safe_reason = escape_md(reason)
+
         # Build item block
         item_text = (
-            f"*{rank}. [{title}]({url})* {stars}\n"
+            f"*{rank}. [{safe_title}]({url})* {stars}\n"
             f"{src_emoji} `{source}`"
         )
         if pub_short:
             item_text += f" · {pub_short}"
         item_text += f"\n"
 
-        if reason:
-            item_text += f"_{reason}_\n"
+        if safe_reason:
+            item_text += f"_{safe_reason}_\n"
 
         # Add a snippet of summary (keep it short for readability)
         if summary and summary != "_No summary._":
-            snippet = summary[:200].strip()
+            snippet = escape_md(summary[:200].strip())
             if len(summary) > 200:
                 snippet += "..."
             item_text += f"{snippet}\n"
@@ -131,7 +135,7 @@ def build_telegram_message(ranked: dict) -> list[str]:
             current += item_text
 
     # Footer
-    footer = f"---\n_Scored by SmartDigest · {scorer}_"
+    footer = f"---\n_Scored by SmartDigest · {escape_md(scorer)}_"
     if len(current) + len(footer) > MAX_MSG_LENGTH:
         chunks.append(current)
         chunks.append(footer)
@@ -202,7 +206,7 @@ def run(date_str: Union[str, None] = None, preview: bool = False) -> bool:
     if not items:
         print("[telegram] No items above threshold — nothing to deliver")
         update_last_run("briefing-composer", "skipped", "0 items above threshold")
-        return True
+        return False
 
     messages = build_telegram_message(ranked)
 

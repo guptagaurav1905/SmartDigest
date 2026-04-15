@@ -1,7 +1,7 @@
 {
   "_comment": "Start-of-Day briefing configuration. Edit via NL Config skill.",
   "weather": {
-    "city": "Mumbai",
+    "city": "Delhi",
     "units": "metric",
     "_note": "City name as recognized by wttr.in. Try your city name to verify."
   },

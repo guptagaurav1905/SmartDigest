@@ -89,7 +89,7 @@ def parse_rss(xml_text: str, feed_name: str) -> List[Dict]:
         pub_str = item.findtext("pubDate") or item.findtext("dc:date", namespaces=NS)
         pub_dt = parse_date(pub_str)
 
-        if pub_dt and pub_dt.replace(tzinfo=timezone.utc if pub_dt.tzinfo is None else None) < cutoff:
+        if pub_dt and pub_dt < cutoff:
             continue
 
         description = item.findtext("description") or ""
@@ -127,7 +127,7 @@ def parse_atom(xml_text: str, feed_name: str) -> List[Dict]:
                   entry.findtext("atom:updated", namespaces=NS)
         pub_dt = parse_date(pub_str)
 
-        if pub_dt and pub_dt < cutoff.replace(tzinfo=timezone.utc):
+        if pub_dt and pub_dt < cutoff:
             continue
 
         summary_el = entry.find("atom:summary", NS)

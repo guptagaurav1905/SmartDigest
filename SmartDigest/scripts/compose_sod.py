@@ -185,7 +185,16 @@ def run(channels: list[str] | None = None, date_str: str | None = None,
           f"gmail={has_gmail} tech={has_tech}")
 
     results = deliver_sod(date_str, channels, preview)
-    update_last_run("compose-sod", "success", str(results))
+
+    any_failure = any("error" in str(v) or v == "failure" for v in results.values())
+    any_success = any(v == "success" for v in results.values())
+    if any_failure:
+        overall = "failure"
+    elif any_success:
+        overall = "success"
+    else:
+        overall = "skipped"
+    update_last_run("compose-sod", overall, str(results))
     return results
 
 

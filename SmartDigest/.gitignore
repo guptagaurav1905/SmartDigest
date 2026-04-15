@@ -26,6 +26,7 @@ db/smartdigest.db
 db/smartdigest.db-journal
 db/smartdigest.db-shm
 db/smartdigest.db-wal
+db/genai_traces.db
 
 # SmartDigest — runtime state (auto-updated by scripts)
 state/last_run.json

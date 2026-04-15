@@ -26,10 +26,22 @@ from pathlib import Path
 from typing import List, Dict, Optional
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import (
     get_data_dir, get_project_root, load_config,
     update_last_run, today_str, now_iso
 )
+from observability import (
+    observe, TraceStore,
+    make_input_validator, make_scoring_output_validator,
+    ScorerPromptInput, get_langfuse_client,
+)
+
+# One shared store — written to SmartDigest/db/genai_traces.db
+_obs_store = TraceStore(str(Path(__file__).parent.parent / "db" / "genai_traces.db"))
+
+# Langfuse client — None if LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY not set
+_langfuse = get_langfuse_client()
 
 # ── Groq Model Options (free tier) ──────────────────────────────────────────
 # llama-3.3-70b-versatile   → Best quality, still very fast
@@ -110,6 +122,7 @@ def score_batch(client, items: List[Dict], interests: Dict, user_profile: str, m
     """
     Send a batch of items to Groq for scoring.
     Batching reduces API calls significantly.
+    Each call is instrumented via @observe (latency, tokens, cost, errors → db/genai_traces.db).
     """
     if not items:
         return []
@@ -151,14 +164,34 @@ Respond with ONLY valid JSON array, one object per item, in this exact format:
 ]
 No extra text, no markdown fences. Just the JSON array."""
 
-    try:
-        response = client.chat.completions.create(
+    # --- Thin wrapper so @observe can capture tokens + latency ---
+    def _call_groq_api(prompt: str) -> dict:
+        resp = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.1,   # Low temp for consistent scoring
+            temperature=0.1,
             max_tokens=1500,
         )
-        raw = response.choices[0].message.content.strip()
+        return {
+            "response": resp.choices[0].message.content,
+            "prompt_tokens": resp.usage.prompt_tokens,
+            "completion_tokens": resp.usage.completion_tokens,
+            "metadata": {"batch_size": len(items), "model": model},
+        }
+
+    # Apply observe() dynamically — model is a runtime value, not import-time
+    observed_call = observe(
+        usecase="relevance-scorer",
+        model=model,
+        store=_obs_store,
+        langfuse_client=_langfuse,
+        input_validator=make_input_validator(ScorerPromptInput),
+        output_validator=make_scoring_output_validator(),
+    )(_call_groq_api)
+
+    try:
+        result = observed_call(prompt=prompt)
+        raw = result["response"].strip()
 
         # Clean up any accidental markdown fences
         raw = re.sub(r'^```json?\s*', '', raw)
@@ -262,6 +295,12 @@ def run(model: str = DEFAULT_MODEL, date_str: Optional[str] = None) -> int:
 
     out_path.write_text(json.dumps(output, indent=2))
     print(f"[groq] Written to {out_path}")
+
+    # All batches failed (API error, bad key, etc.) — don't call this a success
+    if all_items and not scored_items:
+        update_last_run("relevance-scorer", "failure",
+                        f"0/{len(all_items)} items scored — all batches failed (check GROQ_API_KEY)")
+        return 0
 
     update_last_run("relevance-scorer", "success",
                     f"{len(scored_items)} evaluated, {len(top_items)} above threshold — groq/{model}")
